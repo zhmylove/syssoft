@@ -1,0 +1,57 @@
+Что делать, если нам нужно вывести сразу несколько буферов или прочитать сразу в несколько мест из одного файла? Это решается вводом дополнительного буфера. Это плохо тем, что это требует лишнего копирования данных внутри памяти. Для решения этой проблемы был придуман векторный (или рассеяныый) ввод вывод.
+
+Одна из особенностей реализации векторного ввода-вывода --- структура iovec. Она хранит в себе адрес начала сегмента (iov\_base), в который мы хотим что-то записать, и количество байт (iov\_len), которые мы готовы отвести под хранение данных.
+
+\begin{CCode}{Структура iovec}
+	typedef struct iovec { 
+		void *iov_base;  	/* start address */ 
+		size_t iov_len; 	/* segment length */ 
+	} iovec_t; \end{CCode}
+
+\textbf{Что нам это позволяет делать?}
+
+Теперь, создав массив из векторов ioveс, мы можем последовательно брать вектор и читать/писать данные из блоков, которые в нем описаны.
+Эту процедуру за нас полностью выполняют системные вызовы readv (2) и writev (2). В качестве агрументов они принимают файловый дескриптор, указатель на первую структуру в массиве iovec и количество структур, содержащихся в массиве. 
+
+Системный вызов readv (2) отвечает за векторный вывод и возвращает количество считанных байт.
+
+\begin{CCode}{readv (2)}
+	#include <sys/types.h>
+	#include <sys/uio.h>
+
+	ssize_t readv(
+		int fildes, 				/* file descriptor */ 
+		const struct iovec *iov, 	/* pointer on first structure in array */ 
+		int iovcnt 					/* size of array of structres */ 
+	); \end{CCode}
+
+Системный вызов write (2) отвечает за векторный вввод и возвращает количество записанных байт.
+
+\begin{CCode}{writev}
+	#include <sys/types.h>
+	#include <sys/uio.h>
+
+	ssize_t writev(
+		int fildes, 				/* file descriptor */ 
+		const struct iovec *iov, 	/* pointer on first structure in array */ 
+		int iovcnt 					/* size of array of structres */ 
+	); \end{CCode}
+
+\begin{CCode}{Пример}
+	ssize_t bytes_written;
+	int fd;
+	char *buf0 = "Inspiration unlocks the future.\n";
+	char *buf1 = "Now go, and don't look back.\n";
+	int iovcnt;
+	const struct iovec iov[2];
+
+	iov[0].iov_base = buf0;
+	iov[0].iov_len = strlen(buf0);
+	iov[1].iov_base = buf1;
+	iov[1].iov_len = strlen(buf1);
+	
+	iovcnt = sizeof(iov) / sizeof(struct iovec);
+		...
+	bytes_written = writev(fd, iov, iovcnt); \end{CCode}
+
+В этом примере в файл с дескриптором fd будут записаны две строки из buf0 и buf1.

@@ -1,0 +1,13 @@
+Механизм rwlock --- чуть более продвинутая вещь, чем мьютекс. С rwlock вы можете не блокировать ресурс целиком, а, например, сделать его недоступным для записи, но доступным для чтения. 
+
+\begin{CCode}{Механизм блокировок rwlock реализуется с помощью таких функций как:}
+	#include <pthread.h>
+
+    int pthread_rwlock_init(pthread_rwlock_t * restrict lock,
+        const pthread_rwlockattr_t * restrict attr);
+
+    int pthread_rwlock_destroy(pthread_rwlock_t *lock);
+
+	int pthread_rwlock_wrlock(pthread_rwlock_t *lock);
+
+    int pthread_rwlock_unlock(pthread_rwlock_t *lock); \end{CCode}

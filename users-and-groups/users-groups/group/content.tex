@@ -1,0 +1,29 @@
+Файл /etc/group хранит информацию о всех группах системы.
+	
+Приведем список атрибутов грруппы.
+
+\textbf{name : x : GID : users}
+
+\begin{itemize}
+
+\item \begin{defi}{name}
+		символьное имя;
+		\end{defi}
+
+\item \begin{defi}{x}
+		устаревшее поле (раньше был пароль);
+		\end{defi}
+
+\item \begin{defi}{GID}
+		идентификатор группы;
+		\end{defi}
+
+\item \begin{defi}{users}
+		список имен пользователей, для которых эта группа не является главной, разделенных запятыми.
+
+		\begin{important}
+		Если вам нужно получить главную группу пользователя, обращайтесь к файлу /etc/passwd.
+		\end{important}
+		\end{defi}
+
+\end{itemize}

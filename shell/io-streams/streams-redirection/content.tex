@@ -1,0 +1,40 @@
+Для удобства и расширения возможностей работы с потоками в юникс существует механизм из перенаправления. Рассмотрим его синтаксис: 
+
+\begin{myenv}{i > filename}{перенаправление потока с дескриптором i в файл filename с
+перезаписью содержимого filename}
+\end{myenv}
+
+\begin{myenv}{i >{>} filename}{перенаправление потока с дескриптором i в файл filename с дозаписью
+содержимого filename}
+\end{myenv}
+
+\begin{myenv}{i >| filename}{также перенаправление потока с дескриптором i в файл filename. Однако, в случае, если файл существует, он не будет перезаписан}
+
+\begin{myenv}{< filename}{получение стандартного потока ввода из filename} \end{myenv} 
+\begin{shCode}{Например}
+	ag@helios: /home/ag$ wc -l < myfile \end{shCode}
+Подсчитает количество строк в myfile
+\end{myenv} 
+
+\begin{myenv}{{<}< “string”}{shell будет запрашивать ввод у пользователя, пока пользователь не передаст на вход строку, указанную после символов {<}<}
+\begin{shCode}{Например}
+	ag@helios: /home/ag$ cat -n << end
+	> I want to see in cat -n output
+	> only lines, which I've sent
+	> before line, contained only word
+	> end
+		1  I want to see in cat -n output
+		2  only lines, which I've sent
+		3  before line, contained only word \end{shCode}
+Выведет нумерованные строки, введенные до строки, содержащей только слово “end“
+\end{myenv} 
+
+\begin{myenv}{i <> filename}{открывает файл filename на чтение и запись и связывает его с
+дескриптором i}
+\end{myenv}
+
+\begin{myenv}{i >\& j}{поток с дескриптором i будет указывать туда же куда и поток с
+дескриптором j, в Си --- системные вызовы dup (2) и dup2 (2)}
+\end{myenv}
+
+Для перенаправления потоков также активно используется механизм конвееров, описанный в разделе “Разделители команд”

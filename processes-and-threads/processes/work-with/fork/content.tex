@@ -1,0 +1,84 @@
+Как мы помним, все процессы кроме init порождаются системными вызовами fork(2) или vfork(2). 
+
+Системный вызов fork (2) создает дочерний процесс - точную копию родительского процесса. При успешном выполнении процессу родителю возвращается PID потомка, а потомку - 0.
+
+\begin{CCode}{fork (2)}
+	#include <sys/types.h>
+	#include <unistd.h>
+	
+	pid_t fork(void); \end{CCode}
+
+\begin{CCode}{Пример}
+	int main(void) {
+		pid_t pid;
+
+		pid = fork(); /* change to vfork */
+	
+	    if (pid == 0) {
+	        /* Now we're in child process */
+		}   
+		else {
+			/* Now we're in parent process */
+		}
+		return EXIT_SUCCESS; 
+	} \end{CCode}
+
+
+Системный вызов vfork (2) определяется как fork (2) со следующим ограничением: поведение функции не определено, если созданный с её помощью процесс совершит хотя бы одно из следующих действий:
+
+\begin{itemize}
+	\item Произведет возврат из функции, в которой был вызван vfork (2);
+	\item Вызовет любую функцию кроме \_exit() или exec* (2);
+	\item Изменит любые данные кроме переменной, в которой хранится возвращаемое функцией vfork (2) значение.
+\end{itemize}
+
+\begin{CCode}{vfork (2)}
+	#include <sys/types.h>
+	#include <unistd.h>
+
+	pid_t vfork(void); \end{CCode}
+
+\\\\
+\textbf{Разница между fork (2) и vfork (2).}
+
+В отличие от fork (2), vfork (2) не создает копию родительского процесса, а создает разделяемое с родительским процессом адресное пространство до тех пор, пока не будет вызвана функция \_exit или одна из функций exec.
+Родительский процесс на это время останавливает свое выполнение. Отсюда следуют и все ограничения на использование – дочерний процесс не может изменять никакие глобальные переменные или даже общие.
+
+Другими словами, после вызова vfork() оба процесса будут видеть одни и те же данные и переменные.
+
+Единственный вариант использования vfork --- когда вы предполагаете, что в скором будущем вы выполните функцию exec, которая заместит ваше адресное пространство новым исполняемым файлом. Соответственно, начиная с этого момента, будет разблокировано выполнение процесса родителя.
+
+\begin{CCode}{Пример}
+	int main(void) {
+		pid_t pid;
+		int status, common_var = 0;
+	
+		pid = fork(); /* change to vfork */
+	
+	    if (pid == 0) {
+	        /* Child  */
+			common_var = 1;
+			printf("Child common_var value: %i \n",  common_var);
+			
+			exit(EXIT_SUCCESS);
+		}   
+		waitpid(pid, &status, 0);
+		printf("Parent common_var value: %i \n",  common_var);
+		
+		if (common_var) {
+			puts("vfork(): common variable has been changed");
+		} else {
+			puts("fork(): common variable hasn't been changed");
+		}   
+		return EXIT_SUCCESS; 
+	} \end{CCode}
+
+\begin{CCode}{Вывод для fork (2)}
+	Child common_var value: 1 
+	Parent common_var value: 0 
+	fork(): common variable hasn't been changed \end{CCode}
+
+\begin{CCode}{Вывод для vfork (2)}
+	Child common_var value: 1 
+	Parent common_var value: 1 
+	vfork(): common variable has been changed \end{CCode}

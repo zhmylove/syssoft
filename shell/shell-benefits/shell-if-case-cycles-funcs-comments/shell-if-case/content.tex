@@ -1,0 +1,48 @@
+Для ветвления программ в shell существуют условные конструкции IF и CASE.
+
+\begin{shCode}{IF...THEN...ELSE}
+	IF ( <condition> ) 
+		THEN <actions>
+	ELIF ( <alternative condition> ) 
+		THEN <actions>
+	ELSE 
+		<actions>
+	FI
+\end{shCode}
+
+В качестве условия выполнения --- <condition> --- принимает набор команд (Например, через  \&\&). Действие после THEN будет выполнено только в случае, если код возврата последней команты --- успех.
+
+\begin{important}
+	Помним, что при написании IF и THEN в одной строке они должны разделяться “;”, так как являются разными командами
+\end{important}
+
+\begin{shCode}{То есть:}
+	IF ( <condition>) ; THEN <Actions>
+	ELIF ( <alternative condition> ) ; THEN <actions>
+	ELSE <actions>
+	FI
+\end{shCode}
+
+
+\begin{shCode}{CASE}
+	CASE (<string>) IN
+     pattern-1)      
+		<actions>
+          	;;
+     pattern-2)      
+     	<actions>
+          	;;
+     pattern | pattern)
+     	<actions>
+          	;;
+	ESAC
+\end{shCode}
+
+Принимает строку и в случае соответствие ее одному из установленных шаблонов совершает необходимые действия. По сути, аналог switch.
+
+\begin{important}
+	Не забываем о возможностях использования glob-джокерах в CASE. Так * будет обозначать не вошедшие в шаблоны случаи.
+\end{important}
+
+Заметка: завершающие слова в IF и CASE - просто написание их же в обратном порядке (IF - FI, CASE - ESAC)
+

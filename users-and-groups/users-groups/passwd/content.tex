@@ -1,0 +1,39 @@
+В ОС UNIX пользователь представляет собой некоторую сущность, которая обладает некими атрибутами. Атрибуты каждого пользователя можно увидеть в файле /etc/passwd. Этот файл хранит информацию о пользователях системы.
+
+Приведем список атрибутов пользователя.
+
+\textbf{name : password : UID : GID : GECOS: home : shell}
+
+\begin{itemize}
+
+	\item \begin{defi}{name} 
+			логин;
+			\end{defi}
+	
+	\item \begin{defi}{x} 
+			пароль (сейчас перемещен например в /etc/master.passwd (FreeBSD) или /etc/shadow);
+			\end{defi}
+			
+	\item \begin{defi}{UID}
+			идентификатор пользователя (обычно от 0 до 65535);
+			\end{defi}
+			
+	\item \begin{defi}{GID}
+			идентификатор главной группы;
+			\end{defi}
+			
+	\item \begin{defi}{GECOS}
+			вспомогательная информация о пользователе (например, имя, номер телефона, адрес).
+			
+			Для изменения GECOS используется утилита chnf;
+			\end{defi}
+			
+	\item \begin{defi}{home}
+			домашний каталог пользователя;
+			\end{defi}
+			
+	\item \begin{defi}{shell} 
+			командный интерпретатор, запускаемый по умолчанию.
+			\end{defi}
+			
+\end{itemize}

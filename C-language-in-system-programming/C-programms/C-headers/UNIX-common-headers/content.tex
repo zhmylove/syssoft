@@ -1,0 +1,25 @@
+Приведем заголовочные файлы, наиболее часто используемые в системном программировании в опреационной системе UNIX.
+
+	\begin{center}
+		\begin{tabular}{l|l}	
+			\textbf{Имя} & \textbf{Содержимое} \\
+			\hline
+			unistd.h 	& объявления UNIX \\
+			\hline
+			stdio.h  	& стандартный ввод/вывод \\
+			\hline
+			fcntl.h  	& операции с файлами (например: open) \\
+			\hline
+			sys/types.h	& системные типы \\
+			\hline
+			sys/stat.h	& системные статусы \\
+			\hline
+			errno.h	& errno и и директивы с определением ошибок \\
+		\end{tabular}
+		\end{center}
+		
+Более подробно узнать об их назначении можно узнать использовав команду \textbf{man}.
+
+	\begin{shCode}{Например}
+		ag@helios:/home/ag$ man stdlib 
+		ag@helios:/home/ag$ man stdlib.h \end{shCode}

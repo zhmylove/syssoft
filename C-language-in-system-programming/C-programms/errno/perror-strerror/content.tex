@@ -1,0 +1,22 @@
+В реальном коде, для быстрого получения описания ошибки используются функции prerror и strerror. Они работают, анализируя текущее значение errno.
+
+\begin{CCode}{perror (3)}
+	void perror(
+		const char *str
+	); \end{CCode}
+Выведет в STDOUT сообщение вида “str:  <описание текущего значения errno>”
+
+\begin{CCode}{strerror (3)}
+	char * strerror(
+		int errnum
+	); \end{CCode}
+Вернет указатель на строку с описанием текущего значения errno
+
+
+Например в нашей исходной функции, perror (3) используется, чтобы диагностировать ошибку, возникающую в функции main, если ОС не удалось открыть файл.
+
+\begin{CCode}{main.c}
+	if (open(argv[1], O_RDONLY) < 0) {
+		perror("main");			
+		return EXIT_FAILURE;
+	} \end{CCode}	 

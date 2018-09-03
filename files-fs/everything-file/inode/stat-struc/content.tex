@@ -1,0 +1,74 @@
+Довольно часто нам требуется узнать  информацию о каком-то файле. Какого типа информацию? Например, что это за файл, его права доступа. Фактически, ту информацию, которая хранится в inode. И эту информацию мы можем получить с помощью системного вызова stat (2). Называется он от "get status file" (получить статус файла).
+
+\begin{defi}{stat}
+	структура для хранения метаданных файла, полученных системным вызовом stat (Сами метаданные хранятся в структуре индексного дескриптора).
+\end{defi}
+
+\textbf{Некоторые поля структуры stat}
+
+\begin{center}
+\begin{tabular}{l|l}
+
+	\textbf{Поле}	&	\textbf{Назначение} \\
+	\hline
+	mode\_t st\_mode	&	Тип файла и права на него \\
+	\hline
+	ino\_t st\_ino	&	Номер индексного дескриптора \\
+	\hline
+	dev\_t st\_dev	&	Номер устройства, на котором хранится файл \\
+	\hline
+	NLink\_t st\_nlink	&	Количество жестких ссылок \\
+	\hline
+	uid\_t st\_uid	&	UID \\
+	\hline
+	gid\_t st\_gid	&	GID \\
+	\hline
+	off\_t st\_size	&	Размер файла в байтах \\
+	\hline
+	time\_t st\_atime		&	Время последнего доступа \\
+	\hline
+	time\_t st\_mtime		&	Время последней модификации содержимого \\
+	\hline
+	time\_t st\_ctime		&	Время последней модификации метаданных \\
+	\hline
+	long st\_blksize		&	Оптимальный размер для ввода-вывода \\
+	\hline
+	long st\_blocks		&	Число размещенных блоков хранения \\
+	\hline
+
+\end{tabular}
+\end{center}
+
+Для получения stat существует следующее семейство системных вызовов:
+
+\begin{CCode}{stat (2)}
+	#include <sys/types.h>
+	#include <sys/stat.h>
+
+	int stat(
+		const char *path, 
+		struct stat *st
+	); \end{CCode}
+Через имя файла (для обычного файла).
+			
+\begin{CCode}{lstat (2)}
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	
+	int lstat(
+		const char *path, 
+		struct stat *st
+	); \end{CCode}
+Через имя файла (для символьной ссылки).
+	
+\begin{CCode}{fstat (2)}
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	
+	int fstat(
+		int filedes, 
+		struct stat *st
+	); \end{CCode}
+Через файловый дескриптор
+
+Эти системные вызовы возвращают ноль, в случае успеха, либо код ошибки.
