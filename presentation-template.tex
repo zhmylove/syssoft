@@ -1,0 +1,353 @@
+\documentclass[10pt,pdf,hyperref={unicode}]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{mathtext}
+\usepackage[T1,T2A]{fontenc}
+
+% special
+\usepackage{xcolor}
+\usepackage{listings}
+
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    postbreak=\%\space,
+    language=C
+}
+
+%%% sh language codestyle
+\lstdefinestyle{shStyle} {
+	backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    postbreak=\%\space,
+    morecomment=[s][\color{red}]{\ -}{\ },
+    otherkeywords={$,@,>,<,#,!,ELIF,IF,THEN,ELSE,FI,ESAC,CASE,WHILE,DO,UNTIL,FOR,echo,man,chmod},
+    language=sh
+}
+
+
+\lstnewenvironment{CCode}[1]{
+	\lstset{style=CStyle}
+	\funci{#1}
+}{
+}
+
+\lstnewenvironment{shCode}[1]{
+	\lstset{style=shStyle}
+	\funci{#1}
+}{
+}
+
+\usecolortheme{whale}
+
+\title[СПО]{Системное программное обеспечение}
+\subtitle{Введение в язык Си}
+\author{Жмылев С. А., Афанасьев Д. Б.}
+\date{24.08.2018}
+
+\newenvironment{myenv}[2]{
+	\renewcommand{\tabcolsep}{0cm}
+	\begin{tabular}{p{0.2\linewidth}p{0.8\linewidth}}
+	\textbf{#1} & #2
+	\end{tabular}
+	\it{}
+	}
+
+\newtheorem*{inner}{\innerheader}
+\newcommand{\innerheader}{}
+\newenvironment{defi}[1]{
+		\renewcommand\innerheader{\textbf{#1}}
+		\begin{inner}
+		\\[0.3em]
+		\begin{tabular}{p{0.5cm\linewidth}p{0.8\linewidth}}
+		 & \normalfont
+		}
+		{
+		\end{tabular}
+		\\
+		\end{inner}
+		}
+		
+\newenvironment{important}{\textcolor{red}{Важно: }{}}
+
+\newcommand{\funci}[1]{{\textbf{#1}}}
+	
+\begin{document}
+
+
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	 
+	\section{Введение в язык Си}
+	
+	\section{Структура программы}
+	\begin{frame}[fragile]
+	
+		\frametitle{Структура программ}
+		
+		\begin{CCode}{main.c}
+			#include <stdio.h>
+			
+			void myfunc() {
+				printf("Inspiration unlocks the future");
+			}
+		
+			int main(int argc, char *argv[], char *envp[]) { 
+
+				myfunc();			
+ 				
+ 				return 0; 
+			} \end{CCode}
+		
+	\end{frame}
+	
+	\subsection{Аргументы main}
+	\begin{frame}[fragile]
+		\frametitle{Агрументы main}
+		
+		\begin{itemize}
+		
+			\item
+			\begin{myenv}{argc}{arguments count}
+			Количество переданных программе аргументов, включая имя программы
+			\end{myenv}
+			
+			\item
+			\begin{myenv}{*argv[]}{argument vector}
+			Массив указателей на каждый из параметров переданных программе аргументов, включая имя программы (агрумент 0)
+			\end{myenv}
+			
+			\item
+			\begin{myenv}{*envp[]}{environment parameters}
+			Указатель на  массив переменных окружения
+			\end{myenv}
+			
+			% в памяти
+
+			
+		\end{itemize}
+	
+	\end{frame}
+	
+	\subsection{Заголовочные файлы}
+	\begin{frame}[fragile]
+	
+		\frametitle{Заголовочные файлы}
+		
+		\begin{defi}{Заголовочный файл}
+		Файл, содержимое которого при компилляции автоматически добавляется препроцессором  в исходный текст программы на место директивы
+		\end{defi}
+		\\ \\
+
+		Может содержать только:
+		\begin{itemize}
+		
+			\item прототипы функций
+			\item структуры
+			\item союзы
+			\item перечисления
+			\item макросы
+			\item typedef
+			\item глобальные переменные
+		\end{itemize}	
+		
+		\begin{important}			
+			Не должен содержать описания функций и системных вызовов
+		\end{important}
+	
+	\end{frame}
+	
+	\subsection{Часто используемые заголовочные файлы UNIX}
+	\begin{frame}[fragile]
+	
+		\frametitle{Часто используемые заголовочные файлы UNIX}
+		
+		\begin{center}
+		\begin{tabular}{l|l}	
+			unistd.h 	& объявления UNIX \\
+			\hline
+			stdio.h  	& стандартный ввод/вывод \\
+			\hline
+			fcntl.h  	& операции с файлами (например: open) \\
+			\hline
+			sys/types.h	& системные типы \\
+			\hline
+			sys/stat.h	& системные статусы \\
+			\hline
+			errno.h	& errno и и директивы с определением ошибок \\
+		\end{tabular}
+		\end{center}
+		
+	\end{frame}
+	
+	\subsection{Код возврата}
+	\begin{frame}[fragile]
+	
+		\frametitle{Код возврата}
+		
+		\begin{defi}{Код возврата}
+		Число, возвращаемое родительскому процессу при завершении дочернего, позволяющее сделать выводы о результате выполнения программы
+
+		\end{defi}
+		
+		Как правильнее?
+				
+		\begin{CCode}{}
+			int main(int argc, char *argv[], char *envp[]) { 
+ 				/* Actions */
+ 				return 0; 
+			} \end{CCode}
+		
+		или
+		
+		\begin{CCode}{}
+		int main(int argc, char *argv[], char *envp[]) { 
+ 				/* Actions */
+ 				return EXIT_SUCCES; 
+			} \end{CCode}
+		
+	\end{frame}
+	
+	\subsection{Ошибки и стандартизация ошибок: errno.h}
+	\begin{frame}[fragile]
+	
+		\frametitle{Ошибки и стандартизация ошибок: errno.h}
+		
+		\begin{defi}{errno.h}
+		 Заголовочный файл стандартной библиотеки языка программирования С, содержащий: 
+		\end{defi}
+		
+		\begin{itemize}
+			\item Переменную \textbf{errno} типа external int
+			\item Директивы с определением ошибок и их кодов, например:	
+		\end{itemize}
+		
+		\begin{CCode}{main.c}
+			#define ENODEV   19  /* No such device */
+			#define ENOTDIR  20  /* Not a directory */
+			#define EISDIR   21  /* Is a directory */  \end{CCode}
+		
+	\end{frame}
+	
+	\subsection{Ошибки и стандартизация ошибок: perror(3) и strerror(3) }
+	\begin{frame}[fragile]
+	
+		\frametitle{Ошибки и стандартизация ошибок: perror(3) и strerror(3)}
+		
+		
+		\begin{CCode}{perror (3)}
+			void perror(const char *str); \end{CCode}
+			
+		Выводит в STDOUT сообщение вида “str:  описание ошибки”
+		
+		\\[0.5cm]
+		\begin{CCode}{strerror (3)}
+			char *strerror(int errnum); \end{CCode}
+			
+		Возвращает указатель на строку с описанием ошибки
+		
+	\end{frame}
+	
+	
+	\subsection{Компиляция программы: Этапы компиляции}
+	\begin{frame}[fragile]
+	
+		\frametitle{Компиляция программы: Этапы компиляции}
+
+		\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.15\textwidth]{picpath}
+\end{figure}
+
+	\end{frame}
+	
+	\subsection{Компиляция программы: Чем компилировать}
+	\begin{frame}[fragile]
+	
+		\frametitle{Компиляция программы: Чем компилировать}
+		
+		\begin{itemize}
+		
+			\item
+			\begin{myenv}{cc}{C compiler}
+			\end{myenv}
+			
+			\item
+			\begin{myenv}{gcc}{GNU project C and C++ compiler}
+			\end{myenv}
+			
+			\item
+			\begin{myenv}{clang}{C and Objective-C compiler}
+			\end{myenv}
+			
+			% в памяти
+
+			
+		\end{itemize}
+		
+	\end{frame}
+	
+	\subsection{Компиляция программы: Makefile и утилита make}
+	\begin{frame}[fragile]
+	
+		\frametitle{Компиляция программы: Makefile и утилита make}
+		
+		\begin{shCode}{Makefile}
+		PROJS=main
+		CC=gcc
+		CFLAGS=-m64
+
+		all: $(PROJS)
+			@echo Done!
+		$(PROJS):
+			$(CC) $(CFLAGS) -o $@ $(@:=.c) \end{shCode}
+			
+		\begin{shCode}{Утилита make}
+		$ make
+			gcc -m64 -o main main.c
+		Done!
+		$ ./main
+			Inspiration unlocks the future \end{shCode}
+		
+	\end{frame}
+	
+	
+ 
+\end{document}
